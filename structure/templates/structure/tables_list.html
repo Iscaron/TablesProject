@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Tables</title>
+    </head>
+    <body>
+        <div>
+            <h1><a href="/">Tables</a></h1>
+        </div>
+
+        <div>
+            {% for table in tables %}
+            <div>
+                    <p>changed: {{ table.change_date }}</p>
+                    <h1><a href="">{{ table.title }}</a></h1>
+                    <p>{{ table.text|linebreaksbr }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>
