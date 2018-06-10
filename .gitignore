@@ -1,0 +1,16 @@
+vscode/*
+env/*
+__pycache__/*
+/static
+.DS_Store
+*~
+*.pyc
+*.log
+*.key
+*.csv
+*.xls*
+*.db
+*.json
+*.sqlite3
+*test*
+working_data.py
