@@ -1,9 +1,10 @@
 {% extends 'structure/base.html' %}
+
 {% block content %}
-    {% for table in tables %}                
+    {% for table in tables %}
         <div class="table">
             <div class="date">
-                <p>changed: {{ table.change_date }}</p>
+                {{ table.change_date }}
             </div>
             <h1><a href="{% url 'table_detail' pk=table.pk %}">{{ table.title }}</a></h1>
             <p>{{ table.text|linebreaksbr }}</p>
