@@ -1,13 +1,17 @@
 {% extends 'structure/base.html' %}
 
 {% block content %}
-    {% for table in tables %}
-        <div class="table">
+    <div class="table">
+        {% if table.change_date %}
             <div class="date">
-                {{ table.change_date }}
+                <p> created: {{ table.create_date }} by {{ table.owner }}</p>
+                <p> changed: {{ table.change_date }}</p>
             </div>
-            <h1><a href="{% url 'table_detail' pk=table.pk %}">{{ table.title }}</a></h1>
-            <p>{{ table.text|linebreaksbr }}</p>
-        </div>
-    {% endfor %}
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'table_edit' pk=table.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        {% endif %}
+        <h1>{{ table.title }}</h1>
+        <p>{{ table.text|linebreaksbr }}</p>
+    </div>
 {% endblock %}

@@ -6,7 +6,6 @@
                 <p>changed: {{ table.change_date }}</p>
             </div>
             <h1><a href="{% url 'table_detail' pk=table.pk %}">{{ table.title }}</a></h1>
-            <p>{{ table.text|linebreaksbr }}</p>
         </div>
     {% endfor %}
 {% endblock %}
