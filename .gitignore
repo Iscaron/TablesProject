@@ -2,7 +2,6 @@ vscode/*
 env/*
 __pycache__/*
 /static
-.DS_Store
 *~
 *.pyc
 *.log

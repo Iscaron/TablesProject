@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Edid Table</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</head>
+<body style="position:relative;padding:20px;">
+
+<link rel="stylesheet" href="css/tableEdit.css">
+<script src="js/core.js"></script>
+<script src="js/create_table.js"></script>
+<script src="js/controllers_table.js"></script>
+<script src="js/events_table.js"></script>
+<script src="js/callbacks_bootstrap_modal.js"></script>
+<script src="js/callbacks_define_types.js"></script>
+
+    <script>
+
+    jQuery(document).ready(function($){
+        
+        var R = 0,
+            rowsGenerate = new Array(1000);
+        for(var i = 0; i < rowsGenerate.length; i++) {
+            
+            var randomPosition = -1;
+            if( i % 10 == 0 ) {
+                randomPosition = Math.floor(Math.random() * 8 + 0);
+                var randomColspan = Math.floor(Math.random() * (8 - randomPosition) + 2);
+                var randomRowspan = Math.floor(Math.random() * 8 + 2);
+                R = randomRowspan - 1;
+
+                rowsGenerate[i] = new Array(10 - (randomColspan - 1));
+                rowsGenerate[i][randomPosition] = {value:'value',settings:{ colspan:randomColspan,rowspan:randomRowspan }};
+            }
+
+            else if( R > 0 ) {
+
+                rowsGenerate[i] = new Array(10 - randomColspan);
+                R--;
+
+            }
+            else {
+
+                rowsGenerate[i] = new Array(10);
+
+            }
+
+            for(n = 0; n < rowsGenerate[i].length; n++) {
+
+                if( n == randomPosition ) {
+                    continue;
+                }
+
+                rowsGenerate[i][n] = {value:'value'};
+            }
+        }
+        var rowsCustom = [
+            [ {value:'head 1'}, {value:'head 2'}, {value:'head 3'}, {value:'head 4'}, {value:'head 5'}, {value:'head 6'}, {value:'head 7'}, {value:'head 8'}, {value:'head 9'}, {value:'head 10'} ]
+        ];
+        var Table = rowsCustom.concat( rowsGenerate );
+        Table.TableEdit({
+            outputMethod: 'prepend',
+            stubElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+            topControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            rowControlsElements: '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            maxRowsOutDelay: 400,
+            howCreateOnce: 80,
+            compileTableAfter: function() {
+                this.$table.addClass('tableEdit');
+                return true;
+            },
+        });
+        
+    });
+
+    </script>
+
+    
+    <textarea id="from-textarea" class="hidden">
+    
+        [
+            [ {"value":"head 1"}, {"value":"head 2"}, {"value":"head 3"}, {"value":"head 4"}, {"value":"head 5","settings":{"class":"danger"}} ],
+            [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value","settings":{"class":"warning"}} ],
+            [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value","settings":{"class":"warning"}} ],
+            [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value","settings":{"class":"warning"}} ],
+            [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value","settings":{"class":"warning"}} ],
+            [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value","settings":{"class":"warning"}} ]
+        ]
+    
+    </textarea>
+    
+    <script>
+
+    jQuery(document).ready(function($){
+        
+        $('#from-textarea').TableEdit({
+            stubElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+            topControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            rowControlsElements: '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            compileTableAfter: function() {
+                this.$table.addClass('table-hover tableEdit');
+                return true;
+            }
+        });
+        
+    });
+
+    </script>
+
+    <table id="from-table" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>head 1</th>
+                <th>head 2</th>
+                <th>head 3</th>
+                <th>head 4</th>
+                <th>head 5</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>foot 1</th>
+                <th>foot 2</th>
+                <th>foot 3</th>
+                <th>foot 4</th>
+                <th>foot 5</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <td>value</td>
+                <td colspan="2" class="warning colspan">value</td>
+                <td>value</td>
+                <td>value</td>
+            </tr>
+            <tr>
+                <td>value</td>
+                <td>value</td>
+                <td>value</td>
+                <td>value</td>
+                <td>value</td>
+            </tr>
+            <tr>
+                <td>value</td>
+                <td>value</td>
+                <td colspan="2" rowspan="2" class="danger colspan rowspan">value</td>
+                <td>value</td>
+            </tr>
+            <tr>
+                <td>value</td>
+                <td>value</td>
+                <td>value</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+
+    jQuery(document).ready(function($){
+        
+        $('#from-table').TableEdit({
+            stubElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+            topControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            rowControlsElements: '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                 '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+            compileTableAfter: function() {
+                this.$table.addClass('table-hover tableEdit');
+                return true;
+            },
+            getSettingsFromCellAfter: function(obj) {
+                if( obj.$element.attr('class') ) obj.settings.class = obj.$element.attr('class');
+                return true;
+            }
+        });
+        
+    });
+
+    </script>
+
+</body>
+</html>
