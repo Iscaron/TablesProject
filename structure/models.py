@@ -3,8 +3,8 @@ from django.utils import timezone
 
 
 class Table(models.Model):
-    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    # editors = models.ForeignKey('auth.User', related_name=models.CASCADE, related_name='+') #TODO: ask about multiply links to editors
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="owner")
+    editors = models.ManyToManyField('auth.User', related_name='editors') #TODO: ????????????????????????
     title = models.CharField(max_length=200)
     text = models.TextField()
     create_date = models.DateTimeField(default=timezone.now)
@@ -18,3 +18,12 @@ class Table(models.Model):
 
     def __str__(self):
         return self.title
+
+# class Editors(models.Model):
+#     table = models.ManyToManyField(Table)
+#     editor = models.ManyToManyField(Table)
+
+
+#     def __str__(self):
+#         return self.title
+

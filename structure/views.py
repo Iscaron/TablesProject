@@ -35,7 +35,7 @@ def table_edit(request, pk):
         form = TableForm(request.POST, instance=table)
         if form.is_valid():
             table = form.save(commit=False)
-            table.owner = request.user #TODO: multiply users
+            table.editors.add(request.user) #TODO: multiply users
             table.change_date = timezone.now()
             table.save()
             return redirect('table_detail', pk=table.pk)

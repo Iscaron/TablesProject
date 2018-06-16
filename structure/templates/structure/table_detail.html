@@ -5,7 +5,7 @@
         {% if table.change_date %}
             <div class="date">
                 <p> created: {{ table.create_date }} by {{ table.owner }}</p>
-                <p> changed: {{ table.change_date }}</p>
+                <p> changed: {{ table.change_date }} by {{ table.editors.all.last }}</p>
             </div>
         {% endif %}
         {% if user.is_authenticated %}
