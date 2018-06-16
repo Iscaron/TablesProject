@@ -1,0 +1,84 @@
+{% extends 'structure/table_base.html' %}
+
+{% block content %}
+    <h1>New table</h1>
+    <form method="POST" class="table-form">{% csrf_token %}
+        <table id="from-table" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>head 1</th>
+                    <th>head 2</th>
+                    <th>head 3</th>
+                    <th>head 4</th>
+                    <th>head 5</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>foot 1</th>
+                    <th>foot 2</th>
+                    <th>foot 3</th>
+                    <th>foot 4</th>
+                    <th>foot 5</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                </tr>
+                <tr>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                </tr>
+                <tr>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                </tr>
+                <tr>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                    <td>value</td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <script>
+    
+        jQuery(document).ready(function($){
+            
+            $('#from-table').tableEdid({
+                stubElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+                topControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                        '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                        '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                rowControlsElements: '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                        '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                compileTableAfter: function() {
+                    this.$table.addClass('table-hover tableEdit');
+                    return true;
+                },
+                getSettingsFromCellAfter: function(obj) {
+                    if( obj.$element.attr('class') ) obj.settings.class = obj.$element.attr('class');
+                    return true;
+                }
+            });
+            
+        });
+    
+        </script>
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

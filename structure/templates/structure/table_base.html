@@ -1,0 +1,52 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <!-- TableEdit block-->
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <!-- TableEdit block end-->
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/structure.css' %}">
+        <title>Tables</title>
+    </head>
+    <body style="position:relative;padding:20px;">
+        <!-- Stylesheet -->
+        <link rel="stylesheet" href="{% static 'TableEdit/css/tableEdit.css' %}">
+        <!-- JQuery library -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <!-- jQuery TableEdit.js files -->
+        <script src="{% static 'TableEdit/js/core.js' %}"></script>
+        <script src="{% static 'TableEdit/js/create_table.js' %}"></script>
+        <script src="{% static 'TableEdit/js/controllers_table.js' %}"></script>
+        <script src="{% static 'TableEdit/js/events_table.js' %}"></script>
+        <script src="{% static 'TableEdit/js/callbacks_bootstrap_modal.js' %}"></script>
+        <script src="{% static 'TableEdit/js/callbacks_define_types.js' %}"></script>
+     
+        <div class="page-header">
+            {% if user.is_authenticated %}
+                <a href="{% url 'table_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            {% endif %}
+            <h1><a href="/">Tables</a></h1>
+        </div>
+
+        <div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    {% block content %}
+                    {% endblock %}            
+                </div>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>

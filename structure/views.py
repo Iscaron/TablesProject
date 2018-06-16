@@ -27,7 +27,7 @@ def table_new(request):
             return redirect('table_detail', pk=table.pk)
     else:
         form = TableForm()
-    return render(request, 'structure/table_edit.html', {'form': form})
+    return render(request, 'structure/table_new.html', {'form': form})
 
 def table_edit(request, pk):
     table = get_object_or_404(Table, pk=pk)
