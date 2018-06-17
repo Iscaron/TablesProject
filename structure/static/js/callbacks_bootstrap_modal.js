@@ -110,7 +110,8 @@ jQuery(document).ready(function($){
         },
 
         cellEditingStartBefore: function(params) {
-            params.$menuContent.append('<button type="button" class="btn btn-default btn-xs edit-cell" data-toggle="modal" data-target="#TableEditModal"><span class="glyphicon glyphicon-pencil"></span></button>');
+            // TODO: add cell redactor
+            // params.$menuContent.append('<button type="button" class="btn btn-default btn-xs edit-cell" data-toggle="modal" data-target="#TableEditModal"><span class="glyphicon glyphicon-pencil"></span></button>');
             return true;
         },
 

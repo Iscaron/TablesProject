@@ -3,7 +3,7 @@
 {% block content %}
     <h1>New table</h1>
     <form method="POST" class="table-form">{% csrf_token %}
-        <table id="from-table" class="table table-bordered table-hover">
+        <table id="from-table" class="table_view">
             <thead>
                 <tr>
                     <th>head 1</th>
@@ -57,28 +57,41 @@
         <script>
     
         jQuery(document).ready(function($){
-            
+
             $('#from-table').TableEdit({
-                stubElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
-                topControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                stubElements:           '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+                topControlsElements:    '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
                                         '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
                 bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
                                         '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                rowControlsElements: '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                rowControlsElements:    '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
                                         '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
                 compileTableAfter: function() {
                     this.$table.addClass('table-hover tableEdit');
                     return true;
                 },
                 getSettingsFromCellAfter: function(obj) {
-                    if( obj.$element.attr('class') ) obj.settings.class = obj.$element.attr('class');
+                    if( obj.$element.attr('class') ) { obj.settings.class = obj.$element.attr('class') };
+                    return true;
+                },
+                eventsBindAfter: function() {
+                    // $('#save_button').on('click', this, function(e) {
+                    //     console.log(JSON.stringify(e.data.dataTableArray));
+                    // });
+                    $('body').on('click._editCell', this, function(e) {
+                        if(e.data.cache){
+                        // console.log( JSON.stringify(e.data.dataTableArray) );
+                        }
+                    });
                     return true;
                 }
+                
             });
+            
             
         });
     
         </script>
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button id="save_button" type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}

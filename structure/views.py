@@ -20,13 +20,16 @@ def table_new(request):
         form = TableForm(request.POST)
         if form.is_valid():
             table = form.save(commit=False)
-            table.owner = request.user
-            table.create_date = timezone.now()
-            table.change_date = timezone.now()
-            table.save()
+            # table.owner = request.user
+            # table.create_date = timezone.now()
+            # table.change_date = timezone.now()
+            # table.save()
+            # return HttpResponse('no', content_type='text/html')
             return redirect('table_detail', pk=table.pk)
     else:
         form = TableForm()
+        # request.session['view'] = request.GET['view']
+        # return HttpResponse('ok', content_type='text/html')
     return render(request, 'structure/table_new.html', {'form': form})
 
 def table_edit(request, pk):

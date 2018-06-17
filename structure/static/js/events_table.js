@@ -84,6 +84,7 @@ jQuery(document).ready(function($){
                             $that: e.data,
                             target: e.data.cache.editableCell
                         });
+                        // console.log( JSON.stringify(e.data.dataTableArray) );
                     }
                 }
             );
