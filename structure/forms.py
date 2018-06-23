@@ -1,9 +1,9 @@
 from django import forms
 
-from .models import Table
+from .models import main
 
 class TableForm(forms.ModelForm):
 
     class Meta:
-        model = Table
+        model = main
         fields = ('title', 'text',)

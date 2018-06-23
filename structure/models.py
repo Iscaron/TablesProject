@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils import timezone
+# from django.contrib.postgres.fields import JSONField
 
 
-class Table(models.Model):
+class main(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="owner")
     editors = models.ManyToManyField('auth.User', related_name='editors') #TODO: ????????????????????????
     title = models.CharField(max_length=200)
+    # table_json = JSONField()
     text = models.TextField()
     create_date = models.DateTimeField(default=timezone.now)
     change_date = models.DateTimeField(blank=True, null=True)
