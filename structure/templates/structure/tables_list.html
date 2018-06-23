@@ -3,7 +3,8 @@
     {% for table in tables %}                
         <div class="table">
             <div class="date">
-                <p>changed: {{ table.change_date }}</p>
+                <p> created: {{ table.create_date }} by {{ table.owner }}</p>
+                <p> changed: {{ table.change_date }} by {{ table.editors.all.last }}</p>
             </div>
             <h1><a href="{% url 'table_detail' pk=table.pk %}">{{ table.title }}</a></h1>
         </div>

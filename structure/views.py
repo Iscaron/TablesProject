@@ -3,7 +3,6 @@ from django.utils import timezone
 
 from .models import main
 from .forms import TableForm
-# from .ajax import 
 
 
 def tables_list(request):
@@ -18,21 +17,26 @@ def table_detail(request, pk):
 
 def table_new(request):
     if request.method == "POST":
-        # data = {
-        # 'is_taken': User.objects.filter(username__iexact=username).exists()
-        # }
-        print(request.POST)
+        # print(request.POST)
         form = TableForm(request.POST)
         if form.is_valid():
             table = form.save(commit=False)
             
-            data = request.POST.get('table', None)
-            print (data)
-                
-            # table.owner = request.user
-            # table.create_date = timezone.now()
-            # table.change_date = timezone.now()
-            # table.save()
+            # data = request.POST.get('table', None)
+            # print (data)
+            table.owner = request.user
+            table.editors.add(request.user) 
+            table.create_date = timezone.now()
+            table.change_date = timezone.now()
+            table.table_body = [
+                                    [ {"value":"head 1"}, {"value":"head 2"}, {"value":"head 3"}, {"value":"head 4"}, {"value":"head 5"} ],
+                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ]
+                                ]
+            table.save()
             # return HttpResponse('no', content_type='text/html')
             # print(request.POST)
             return redirect('table_detail', pk=table.pk)
@@ -40,7 +44,7 @@ def table_new(request):
         form = TableForm()
         # request.session['view'] = request.GET['view']
         # return HttpResponse('ok', content_type='text/html')
-    return render(request, 'structure/table_new.html', {'form': form})
+    return render(request, 'structure/table_edit.html', {'form': form})
 
 def table_edit(request, pk):
     table = get_object_or_404(main, pk=pk)

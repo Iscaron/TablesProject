@@ -6,4 +6,4 @@ class TableForm(forms.ModelForm):
 
     class Meta:
         model = main
-        fields = ('title', 'text',)
+        fields = ('title', 'description',)

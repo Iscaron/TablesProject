@@ -1,4 +1,5 @@
-{% extends 'structure/base.html' %}
+{% extends 'structure/table_base.html' %}
+{% load jsonify %}
 
 {% block content %}
     <div class="table">
@@ -12,6 +13,73 @@
             <a class="btn btn-default" href="{% url 'table_edit' pk=table.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
         {% endif %}
         <h1>{{ table.title }}</h1>
-        <p>{{ table.text|linebreaksbr }}</p>
+        <form method="POST" class="table-form">{% csrf_token %}
+            
+            <textarea id="from-textarea" class="hidden">
+                {{ table.table_body|jsonify }} 
+            </textarea>
+        
+            <script>
+        
+            jQuery(document).ready(function($){
+    
+                $('#from-textarea').TableEdit({
+                    stubElements:           '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+                    topControlsElements:    '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                            '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                    bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                            '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                    rowControlsElements:    '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                            '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                    compileTableAfter: function() {
+                        this.$table.addClass('table-hover tableEdit');
+                        return true;
+                    },
+                    getSettingsFromCellAfter: function(obj) {
+                        if( obj.$element.attr('class') ) { obj.settings.class = obj.$element.attr('class') };
+                        return true;
+                    },
+                    eventsBindAfter: function() {
+                        $('#save_button').on('click', this, function(e) {
+                            
+                            var csrf_token = $("form input[name='csrfmiddlewaretoken']").val();
+                            function csrfSafeMethod(method) {
+                                // these HTTP methods do not require CSRF protection
+                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                            }
+                            $.ajaxSetup({
+                                beforeSend: function(xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                                    }
+                                }
+                            });
+                            $.ajax({
+                                url: '/table/new/',
+                                data: {
+                                'table': JSON.stringify(e.data.dataTableArray),
+                                'csrf_token': csrf_token
+                                },
+                                dataType: 'json',
+                                method: 'POST'
+                            });
+                            console.log(JSON.stringify(e.data.dataTableArray));
+                        });
+                        $('body').on('click._editCell', this, function(e) {
+                            if(e.data.cache){
+                            console.log( JSON.stringify(e.data.dataTableArray) );
+                            }
+                        });
+                        return true;
+                    }
+                });
+            });
+    
+            
+            
+            </script>
+            
+            <button id="save_button" type="submit" class="save btn btn-default">Save</button>
+        </form>
     </div>
 {% endblock %}

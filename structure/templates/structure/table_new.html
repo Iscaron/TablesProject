@@ -89,9 +89,6 @@
                                 }
                             }
                         });
-
-
-                        console.log(csrf_token);
                         $.ajax({
                             url: '/table/new/',
                             data: {
@@ -99,12 +96,7 @@
                             'csrf_token': csrf_token
                             },
                             dataType: 'json',
-                            method: 'POST'//,
-                            // success: function (data) {
-                            // if (data.is_taken) {
-                            //     alert("A user with this username already exists.");
-                            // }
-                            // }
+                            method: 'POST'
                         });
                         console.log(JSON.stringify(e.data.dataTableArray));
                     });
