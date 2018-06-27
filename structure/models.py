@@ -6,7 +6,7 @@ import jsonfield
 
 class main(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="owner")
-    editors = models.ManyToManyField('auth.User', related_name='editors') #TODO: ????????????????????????
+    editors = models.ManyToManyField('auth.User', related_name='editors') 
     title = models.CharField(max_length=200)
     table_body = jsonfield.JSONField()
     description = models.TextField()

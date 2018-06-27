@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 
@@ -11,8 +13,31 @@ def tables_list(request):
 
 
 def table_detail(request, pk):
-    table = get_object_or_404(main, pk=pk)
-    return render(request, 'structure/table_detail.html', {'table': table})
+    # table = get_object_or_404(main, pk=pk)
+    print (request)
+    if request.method == "POST":
+        # print(request.POST)
+        # form = TableForm(request.POST)
+        # if form.is_valid():
+        #     table = form.save(commit=False)
+        deta = request.POST.get('table', None)
+        if (deta):
+            data = json.loads(deta)
+            print (data)
+            table = main.objects.get(pk=pk)
+            # table.editors.add(request.user) 
+            # table.create_date = timezone.now()
+            table.change_date = timezone.now()
+            table.table_body = data
+            table.save()
+            print ('saved')
+        return redirect('table_detail', pk=table.pk)
+    else:
+        table = get_object_or_404(main, pk=pk)
+        # request.session['view'] = request.GET['view']
+        # return HttpResponse('ok', content_type='text/html')
+    # return render(request, 'structure/table_detail.html', {'form': form})
+        return render(request, 'structure/table_detail.html', {'table': table})
 
 
 def table_new(request):
@@ -37,8 +62,6 @@ def table_new(request):
                                     [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ]
                                 ]
             table.save()
-            # return HttpResponse('no', content_type='text/html')
-            # print(request.POST)
             return redirect('table_detail', pk=table.pk)
     else:
         form = TableForm()

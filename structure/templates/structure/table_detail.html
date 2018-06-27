@@ -3,82 +3,84 @@
 
 {% block content %}
     <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th><h1>{{ table.title }}</h1></th>
+                    <th></th>
+                    {% if user.is_authenticated %}
+                        <th><a class="btn btn-default" href="{% url 'table_edit' pk=table.pk %}"><span class="glyphicon glyphicon-pencil"></span></a></th>
+                    {% endif %}
+                </tr>
+            </thead>
+        </table>
         {% if table.change_date %}
             <div class="date">
                 <p> created: {{ table.create_date }} by {{ table.owner }}</p>
                 <p> changed: {{ table.change_date }} by {{ table.editors.all.last }}</p>
             </div>
         {% endif %}
-        {% if user.is_authenticated %}
-            <a class="btn btn-default" href="{% url 'table_edit' pk=table.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        {% endif %}
-        <h1>{{ table.title }}</h1>
+
         <form method="POST" class="table-form">{% csrf_token %}
             
-            <textarea id="from-textarea" class="hidden">
+            <textarea id="from-textarea">
                 {{ table.table_body|jsonify }} 
             </textarea>
         
             <script>
+                jQuery(document).ready(function($){
         
-            jQuery(document).ready(function($){
-    
-                $('#from-textarea').TableEdit({
-                    stubElements:           '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
-                    topControlsElements:    '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                            '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                    bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                            '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                    rowControlsElements:    '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                            '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                    compileTableAfter: function() {
-                        this.$table.addClass('table-hover tableEdit');
-                        return true;
-                    },
-                    getSettingsFromCellAfter: function(obj) {
-                        if( obj.$element.attr('class') ) { obj.settings.class = obj.$element.attr('class') };
-                        return true;
-                    },
-                    eventsBindAfter: function() {
-                        $('#save_button').on('click', this, function(e) {
-                            
-                            var csrf_token = $("form input[name='csrfmiddlewaretoken']").val();
-                            function csrfSafeMethod(method) {
-                                // these HTTP methods do not require CSRF protection
-                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                            }
-                            $.ajaxSetup({
-                                beforeSend: function(xhr, settings) {
-                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                    $('#from-textarea').TableEdit({
+                        stubElements:           '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
+                        topControlsElements:    '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                                '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                        bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                                '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                        rowControlsElements:    '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
+                                                '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
+                        compileTableAfter: function() {
+                            this.$table.addClass('table-hover tableEdit');
+                            return true;
+                        },
+                        getSettingsFromCellAfter: function(obj) {
+                            if( obj.$element.attr('class') ) { obj.settings.class = obj.$element.attr('class') };
+                            return true;
+                        },
+                        eventsBindAfter: function() {
+                            $('#save_button').on('click', this, function(e) {
+                                var csrf_token = $("form input[name='csrfmiddlewaretoken']").val();
+                                function csrfSafeMethod(method) {
+                                    // these HTTP methods do not require CSRF protection
+                                    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                                }
+                                $.ajaxSetup({
+                                    beforeSend: function(xhr, settings) {
+                                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                                        }
                                     }
+                                });
+                                $.ajax({
+                                    url: window.location.pathname,
+                                    data: {
+                                    'table': JSON.stringify(e.data.dataTableArray)
+                                    // 'csrf_token': csrf_token
+                                    },
+                                    dataType: 'json',
+                                    method: 'POST'
+                                });
+                                // console.log(JSON.stringify(e.data.dataTableArray));
+                            });
+                            $('body').on('click._editCell', this, function(e) {
+                                if(e.data.cache){
+                                console.log( JSON.stringify(e.data.dataTableArray) );
                                 }
                             });
-                            $.ajax({
-                                url: '/table/new/',
-                                data: {
-                                'table': JSON.stringify(e.data.dataTableArray),
-                                'csrf_token': csrf_token
-                                },
-                                dataType: 'json',
-                                method: 'POST'
-                            });
-                            console.log(JSON.stringify(e.data.dataTableArray));
-                        });
-                        $('body').on('click._editCell', this, function(e) {
-                            if(e.data.cache){
-                            console.log( JSON.stringify(e.data.dataTableArray) );
-                            }
-                        });
-                        return true;
-                    }
+                            return true;
+                        }
+                    });
                 });
-            });
-    
-            
-            
             </script>
-            
             <button id="save_button" type="submit" class="save btn btn-default">Save</button>
         </form>
     </div>
