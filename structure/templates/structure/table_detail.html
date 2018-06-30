@@ -21,7 +21,7 @@
             </div>
         {% endif %}
 
-        <form method="POST" class="table-form">{% csrf_token %}
+        <form method="POST"  class="table-form">{% csrf_token %}
             
             <textarea id="from-textarea">
                 {{ table.table_body|jsonify }} 

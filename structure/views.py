@@ -1,19 +1,27 @@
 import json
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+
 from .forms import TableForm, UserForm, UserProfileForm
 from .models import main
 
-
+@login_required
 def tables_list(request):
     table = main.objects.filter(change_date__lte=timezone.now()).order_by('change_date')
     return render(request, 'structure/tables_list.html', {'tables': table})
 
 
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're logged in, you can see this text!")
+
+
+@login_required
 def table_detail(request, pk):
     # table = get_object_or_404(main, pk=pk)
     print (request)
@@ -41,6 +49,7 @@ def table_detail(request, pk):
     return render(request, 'structure/table_detail.html', {'table': table})
 
 
+@login_required
 def table_new(request):
     if request.method == "POST":
         # print(request.POST)
@@ -51,7 +60,7 @@ def table_new(request):
             # data = request.POST.get('table', None)
             # print (data)
             table.owner = request.user
-            table.editors.add(request.user) 
+            # table.editors.add(request.user) 
             table.create_date = timezone.now()
             table.change_date = timezone.now()
             table.table_body = [
@@ -70,19 +79,22 @@ def table_new(request):
         # return HttpResponse('ok', content_type='text/html')
     return render(request, 'structure/table_edit.html', {'form': form})
 
+
+@login_required
 def table_edit(request, pk):
     table = get_object_or_404(main, pk=pk)
     if request.method == "POST":
         form = TableForm(request.POST, instance=table)
         if form.is_valid():
             table = form.save(commit=False)
-            table.editors.add(request.user) 
+            # table.editors.add(request.user) 
             table.change_date = timezone.now()
             table.save()
             return redirect('table_detail', pk=table.pk)
     else:
         form = TableForm(instance=table)
     return render(request, 'structure/table_edit.html', {'form': form})
+
 
 def register(request):
 
@@ -170,7 +182,7 @@ def user_login(request):
                 return HttpResponseRedirect('/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponse("Your account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
             print ("Invalid login details: {0}, {1}".format(username, password))
@@ -182,3 +194,13 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
         return render(request, 'structure/login.html', {})
+
+
+# Use the login_required() decorator to ensure only those logged in can access the view.
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+
+    # Take the user back to the homepage.
+    return HttpResponseRedirect('/')
