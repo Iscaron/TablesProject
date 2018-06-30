@@ -10,9 +10,11 @@
     </head>
     <body>
         <div class="page-header">
-            <a href="/register/">Register Here</a>
             {% if user.is_authenticated %}
                 <a href="{% url 'table_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            {% else %}
+                <a href="/register/">Register</a>
+                <a href="/login/">Login</a>
             {% endif %}
             <h1><a href="/">Tables</a></h1>
         </div>
