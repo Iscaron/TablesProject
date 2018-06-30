@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^table/(?P<pk>\d+)/$', views.table_detail, name='table_detail'),
     url(r'^table/new/$', views.table_new, name='table_new'),
     url(r'^table/(?P<pk>\d+)/edit/$', views.table_edit, name='table_edit'),
+    url(r'^register/$', views.register, name='register'),
 ]
