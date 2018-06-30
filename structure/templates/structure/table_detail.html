@@ -47,7 +47,9 @@
                             return true;
                         },
                         eventsBindAfter: function() {
+
                             $('#save_button').on('click', this, function(e) {
+                                e.preventDefault();
                                 var csrf_token = $("form input[name='csrfmiddlewaretoken']").val();
                                 function csrfSafeMethod(method) {
                                     // these HTTP methods do not require CSRF protection
@@ -63,8 +65,8 @@
                                 $.ajax({
                                     url: window.location.pathname,
                                     data: {
-                                    'table': JSON.stringify(e.data.dataTableArray)
-                                    // 'csrf_token': csrf_token
+                                    'table': JSON.stringify(e.data.dataTableArray),
+                                    'csrf_token': csrf_token
                                     },
                                     dataType: 'json',
                                     method: 'POST'
@@ -81,7 +83,7 @@
                     });
                 });
             </script>
-            <button id="save_button" type="submit" class="save btn btn-default">Save</button>
+            <button id="save_button" class="save btn btn-default">Save</button>
         </form>
     </div>
 {% endblock %}

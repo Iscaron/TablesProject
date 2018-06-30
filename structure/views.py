@@ -20,24 +20,23 @@ def table_detail(request, pk):
         # form = TableForm(request.POST)
         # if form.is_valid():
         #     table = form.save(commit=False)
-        deta = request.POST.get('table', None)
-        if (deta):
-            data = json.loads(deta)
-            print (data)
-            table = main.objects.get(pk=pk)
-            # table.editors.add(request.user) 
-            # table.create_date = timezone.now()
-            table.change_date = timezone.now()
-            table.table_body = data
-            table.save()
-            print ('saved')
-        return redirect('table_detail', pk=table.pk)
+        
+        data = json.loads(request.POST.get('table', None))
+        # print (data)
+        table = main.objects.get(pk=pk)
+        # table.editors.add(request.user) 
+        # table.create_date = timezone.now()
+        table.change_date = timezone.now()
+        table.table_body = data
+        table.save()
+        # print ('saved')
+        # return redirect('table_detail', pk=table.pk)
     else:
         table = get_object_or_404(main, pk=pk)
         # request.session['view'] = request.GET['view']
         # return HttpResponse('ok', content_type='text/html')
     # return render(request, 'structure/table_detail.html', {'form': form})
-        return render(request, 'structure/table_detail.html', {'table': table})
+    return render(request, 'structure/table_detail.html', {'table': table})
 
 
 def table_new(request):
