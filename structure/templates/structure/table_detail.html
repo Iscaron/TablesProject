@@ -23,7 +23,7 @@
 
         <form method="POST"  class="table-form">{% csrf_token %}
             
-            <textarea id="from-textarea">
+            <textarea id="from-textarea" style="display: none;">
                 {{ table.table_body|jsonify }} 
             </textarea>
         
