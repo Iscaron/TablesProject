@@ -6,4 +6,9 @@
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
+    <script>
+    $( document ).ready(function() {
+    $("#id_editors").select2(); 
+});
+    </script>
 {% endblock %}

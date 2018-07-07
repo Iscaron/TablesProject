@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class main(models.Model):
+class Main(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name="owner")
     editors = models.ManyToManyField('auth.User', related_name='editors') 
     title = models.CharField(max_length=200)
@@ -15,9 +15,9 @@ class main(models.Model):
     change_date = models.DateTimeField(blank=True, null=True)
 
 
-    def publish(self):
-        self.change_date = timezone.now()
-        self.save()
+    # def publish(self):
+    #     self.change_date = timezone.now()
+    #     self.save()
 
 
     def __str__(self):

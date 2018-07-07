@@ -9,11 +9,11 @@ from django.contrib.auth.models import User
 
 
 from .forms import TableForm, UserForm, UserProfileForm, EditForm
-from .models import main
+from .models import Main
 
 @login_required
 def tables_list(request):
-    table = main.objects.filter(change_date__lte=timezone.now()).order_by('change_date')
+    table = Main.objects.filter(change_date__lte=timezone.now()).order_by('change_date')
     return render(request, 'structure/tables_list.html', {'tables': table})
 
 
@@ -24,7 +24,7 @@ def restricted(request):
 
 @login_required
 def table_detail(request, pk):
-    # table = get_object_or_404(main, pk=pk)
+    # table = get_object_or_404(Main, pk=pk)
     print (request)
     if request.method == "POST":
         # print(request.POST)
@@ -34,7 +34,7 @@ def table_detail(request, pk):
         
         data = json.loads(request.POST.get('table', None))
         # print (data)
-        table = main.objects.get(pk=pk)
+        table = Main.objects.get(pk=pk)
         # table.editors.add(request.user) 
         # table.create_date = timezone.now()
         table.change_date = timezone.now()
@@ -43,7 +43,7 @@ def table_detail(request, pk):
         # print ('saved')
         # return redirect('table_detail', pk=table.pk)
     else:
-        table = get_object_or_404(main, pk=pk)
+        table = get_object_or_404(Main, pk=pk)
         # request.session['view'] = request.GET['view']
         # return HttpResponse('ok', content_type='text/html')
     # return render(request, 'structure/table_detail.html', {'form': form})
@@ -61,17 +61,17 @@ def table_new(request):
             # data = request.POST.get('table', None)
             # print (data)
             table.owner = request.user
-            # table.editors.add(request.user) 
             table.create_date = timezone.now()
             table.change_date = timezone.now()
-            table.table_body = [
-                                    [ {"value":"head 1"}, {"value":"head 2"}, {"value":"head 3"}, {"value":"head 4"}, {"value":"head 5"} ],
-                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
-                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
-                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
-                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
-                                    [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ]
+            table.table_body = [[ {"value":"head 1"}, {"value":"head 2"}, {"value":"head 3"}, {"value":"head 4"}, {"value":"head 5"} ],
+                                [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ],
+                                [ {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"}, {"value":"value"} ]
                                 ]
+            table.save()
+            table.editors.add(request.user) 
             table.save()
             return redirect('table_detail', pk=table.pk)
     else:
@@ -83,7 +83,7 @@ def table_new(request):
 
 @login_required
 def table_edit(request, pk):
-    table = get_object_or_404(main, pk=pk)
+    table = get_object_or_404(Main, pk=pk)
     if request.method == "POST":
         form = TableForm(request.POST, instance=table)
         if form.is_valid():
@@ -97,8 +97,9 @@ def table_edit(request, pk):
         data = {
                 'title': table.title,
                 'description': table.description,
-                'editors': list(User.objects.filter(is_active=1))
+                'editors': table.editors.all()
         }
+        print(table.editors.all())
         form = EditForm(data)
     return render(request, 'structure/table_edit.html', {'form': form})
 

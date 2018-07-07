@@ -1,14 +1,19 @@
 from django import forms
 from django.contrib.auth.models import User
+from django_select2.forms import Select2MultipleWidget
 
-from .models import UserProfile, main
+from .models import UserProfile, Main
 
 
 class TableForm(forms.ModelForm): #TODO: form 
 
     class Meta:
-        model = main
+        model = Main
         fields = ('title', 'description', 'editors')
+        
+        widgets = {
+            'editors': Select2MultipleWidget,
+            }
 
 class EditForm(forms.Form):
     title = forms.CharField(
@@ -20,10 +25,18 @@ class EditForm(forms.Form):
             label='Description', 
             widget=forms.Textarea
     )
-    editors = forms.CharField(
-            label='Editors', 
-            widget=forms.Textarea
+    editors = forms.ModelMultipleChoiceField(
+            # queryset = Main.objects.all(),
+            queryset = User.objects.all(),
+            # widget = Select2MultipleWidget,
+            label='Editors',
     )
+
+    # def __init__(self, *args, **kwargs):
+    #     ret = super().__init__(args, kwargs)
+    #     print(ret)
+    #     return ret
+    # editors.choices = 
 
 
 
