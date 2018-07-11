@@ -19,6 +19,9 @@ class Main(models.Model):
     #     self.change_date = timezone.now()
     #     self.save()
 
+    # def save(self):
+    #     print (self.owner, self.editors, self.title, self.description)
+    #     print (self)
 
     def __str__(self):
         return self.title

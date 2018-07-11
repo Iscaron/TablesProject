@@ -87,13 +87,13 @@ def table_edit(request, pk):
     if request.method == "POST":
         form = TableForm(request.POST, instance=table)
         if form.is_valid():
-            table = form.save(commit=False)
-            # table.editors.add(request.user) 
-            table.change_date = timezone.now()
-            table.save()
+            save_table = form.save(commit=False)
+            save_table.editors.clear()
+            for user_id in request.POST.getlist('editors'):
+                save_table.editors.add(User.objects.get(pk=user_id))
+            save_table.save()
             return redirect('table_detail', pk=table.pk)
     else:
-
         data = {
                 'title': table.title,
                 'description': table.description,
