@@ -24,42 +24,26 @@ def restricted(request):
 
 @login_required
 def table_detail(request, pk):
-    # table = get_object_or_404(Main, pk=pk)
-    print (request)
+    table = get_object_or_404(Main, pk=pk)
+    if request.user not in table.editors.all():
+        return HttpResponseRedirect('/')
     if request.method == "POST":
-        # print(request.POST)
-        # form = TableForm(request.POST)
-        # if form.is_valid():
-        #     table = form.save(commit=False)
-        
         data = json.loads(request.POST.get('table', None))
-        # print (data)
         table = Main.objects.get(pk=pk)
-        # table.editors.add(request.user) 
-        # table.create_date = timezone.now()
         table.change_date = timezone.now()
         table.table_body = data
         table.save()
-        # print ('saved')
-        # return redirect('table_detail', pk=table.pk)
     else:
         table = get_object_or_404(Main, pk=pk)
-        # request.session['view'] = request.GET['view']
-        # return HttpResponse('ok', content_type='text/html')
-    # return render(request, 'structure/table_detail.html', {'form': form})
     return render(request, 'structure/table_detail.html', {'table': table})
 
 
 @login_required
 def table_new(request):
     if request.method == "POST":
-        # print(request.POST)
         form = TableForm(request.POST)
         if form.is_valid():
             table = form.save(commit=False)
-            
-            # data = request.POST.get('table', None)
-            # print (data)
             table.owner = request.user
             table.create_date = timezone.now()
             table.change_date = timezone.now()
@@ -76,19 +60,19 @@ def table_new(request):
             return redirect('table_detail', pk=table.pk)
     else:
         form = TableForm()
-        # request.session['view'] = request.GET['view']
-        # return HttpResponse('ok', content_type='text/html')
     return render(request, 'structure/table_edit.html', {'form': form})
 
 
 @login_required
 def table_edit(request, pk):
     table = get_object_or_404(Main, pk=pk)
+    if request.user not in table.editors.all():
+        return HttpResponseRedirect('/')
     if request.method == "POST":
         form = TableForm(request.POST, instance=table)
         if form.is_valid():
             save_table = form.save(commit=False)
-            save_table.editors.clear()
+            save_table.editors.clear() # TODO: do without clear()
             for user_id in request.POST.getlist('editors'):
                 save_table.editors.add(User.objects.get(pk=user_id))
             save_table.save()
