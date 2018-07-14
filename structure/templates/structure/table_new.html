@@ -1,119 +1,14 @@
-{% extends 'structure/table_base.html' %}
+{% extends 'structure/base.html' %}
 
 {% block content %}
     <h1>New table</h1>
     <form method="POST" class="table-form">{% csrf_token %}
-        <table id="from-table" class="table_view">
-            <thead>
-                <tr>
-                    <th>head 1</th>
-                    <th>head 2</th>
-                    <th>head 3</th>
-                    <th>head 4</th>
-                    <th>head 5</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>foot 1</th>
-                    <th>foot 2</th>
-                    <th>foot 3</th>
-                    <th>foot 4</th>
-                    <th>foot 5</th>
-                </tr>
-            </tfoot>
-            <tbody>
-                <tr>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                </tr>
-                <tr>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                </tr>
-                <tr>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                </tr>
-                <tr>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                    <td>value</td>
-                </tr>
-            </tbody>
-        </table>
-    
-        <script>
-    
-        jQuery(document).ready(function($){
-
-            $('#from-table').TableEdit({
-                stubElements:           '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>',
-                topControlsElements:    '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                        '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                bottomControlsElements: '<a class="addCol" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                        '<a class="delCol" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                rowControlsElements:    '<a class="addrow" href="javascript://" role="button"><span class="glyphicon glyphicon-plus"></span></a>' +
-                                        '<a class="delrow" href="javascript://" role="button"><span class="glyphicon glyphicon-minus"></span></a>',
-                compileTableAfter: function() {
-                    this.$table.addClass('table-hover tableEdit');
-                    return true;
-                },
-                getSettingsFromCellAfter: function(obj) {
-                    if( obj.$element.attr('class') ) { obj.settings.class = obj.$element.attr('class') };
-                    return true;
-                },
-                eventsBindAfter: function() {
-                    $('#save_button').on('click', this, function(e) {
-                        
-                        var csrf_token = $("form input[name='csrfmiddlewaretoken']").val();
-                        function csrfSafeMethod(method) {
-                            // these HTTP methods do not require CSRF protection
-                            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                        }
-                        $.ajaxSetup({
-                            beforeSend: function(xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
-                                }
-                            }
-                        });
-                        $.ajax({
-                            url: '/table/new/',
-                            data: {
-                            'table': JSON.stringify(e.data.dataTableArray),
-                            'csrf_token': csrf_token
-                            },
-                            dataType: 'json',
-                            method: 'POST'
-                        });
-                        console.log(JSON.stringify(e.data.dataTableArray));
-                    });
-                    $('body').on('click._editCell', this, function(e) {
-                        if(e.data.cache){
-                        console.log( JSON.stringify(e.data.dataTableArray) );
-                        }
-                    });
-                    return true;
-                }
-            });
-        });
-
-        
-        
-        </script>
-        
-        <button id="save_button" type="submit" class="save btn btn-default">Save</button>
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
     </form>
+    <script>
+        $(document).ready(function() {
+            $("#id_editors").select2(); 
+        });
+    </script>
 {% endblock %}

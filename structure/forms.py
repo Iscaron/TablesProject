@@ -5,7 +5,7 @@ from django_select2.forms import Select2MultipleWidget
 from .models import UserProfile, Main
 
 
-class TableForm(forms.ModelForm): #TODO: form 
+class TableForm(forms.ModelForm): 
 
     class Meta:
         model = Main
@@ -26,19 +26,9 @@ class EditForm(forms.Form):
             widget=forms.Textarea
     )
     editors = forms.ModelMultipleChoiceField(
-            # queryset = Main.objects.all(),
             queryset = User.objects.all(),
-            # widget = Select2MultipleWidget,
             label='Editors',
     )
-
-    # def __init__(self, *args, **kwargs):
-    #     ret = super().__init__(args, kwargs)
-    #     print(ret)
-    #     return ret
-    # editors.choices = 
-
-
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
